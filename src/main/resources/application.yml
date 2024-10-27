@@ -1,0 +1,20 @@
+# Eureka Client Configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    port: 8080
+
+# Spring Cloud Gateway Configuration
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: auth_service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
