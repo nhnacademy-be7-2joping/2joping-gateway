@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.5</version>
+		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nhnacademy</groupId>
@@ -104,7 +104,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>2023.0.0</version> <!-- 최신 안정 버전으로 변경 -->
+				<version>2023.0.2</version> <!-- 최신 안정 버전으로 변경 -->
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
