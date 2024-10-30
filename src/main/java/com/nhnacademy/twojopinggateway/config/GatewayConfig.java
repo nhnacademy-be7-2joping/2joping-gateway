@@ -20,6 +20,8 @@ public class GatewayConfig {
         return builder.routes()
                 .route("auth_service", r -> r.path("/auth/**")
                         .uri("lb://AUTH-SERVICE"))// fill service here...
+                .route("backend_service", r -> r.path("/api/v1/**")
+                        .uri("lb://BOOKSTORE")) // BACKEND-SERVICE로 라우팅
                 //... 위 형식으로 서비스 계속 추가할 것.
                 .build();
     }
