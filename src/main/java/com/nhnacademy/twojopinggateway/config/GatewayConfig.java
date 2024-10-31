@@ -19,7 +19,9 @@ public class GatewayConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("auth_service", r -> r.path("/auth/**")
-                        .uri("lb://AUTH-SERVICE"))// fill service here...
+                        .uri("lb://TWOJOPING-USER-AUTH"))// fill service here...
+                .route("bookstore_service", r -> r.path("/auth/**")
+                        .uri("lb://BOOKSTORE"))// fill service here...
                 //... 위 형식으로 서비스 계속 추가할 것.
                 .build();
     }
