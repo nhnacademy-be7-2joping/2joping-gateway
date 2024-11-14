@@ -26,9 +26,9 @@ public class GatewayConfig {
                 .build();
     }
 
-    @Bean
-    public GlobalFilter jwtGlobalFilter() {
-        return jwtAuthenticationFilter; // JwtAuthenticationFilter를 글로벌 필터로 등록
-    }
+//    @Bean
+//    public GlobalFilter jwtGlobalFilter() {
+//        return jwtAuthenticationFilter; // JwtAuthenticationFilter를 글로벌 필터로 등록
+//    }
 
 }
