@@ -30,11 +30,11 @@ public class JwtAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         //로그인 Path는 로직없이 가능
-        String path = exchange.getRequest().getURI().getPath();
-        if (path.startsWith("/login") || path.startsWith("/api/v1/members") || path.startsWith("/api/v1")) {
-            return chain.filter(exchange);
-        }
-
+//        String path = exchange.getRequest().getURI().getPath();
+//        if (path.startsWith("/login") || path.startsWith("/api/v1/members") || path.startsWith("/api/v1")) {
+//            return chain.filter(exchange);
+//        }
+//
         // 토큰 추출
         List<String> tokens = jwtTokenService.resolveToken(exchange);
         String accessToken = tokens.get(0);
@@ -61,16 +61,16 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         return response.setComplete();
     }
 
-    private Mono<Void> requestNewAccessToken(String refreshToken, ServerWebExchange exchange, GatewayFilterChain chain) {
-        //auth 서버에 새로운 accessToken 요청
-        return webClientBuilder.build()
-                .get()
-                .uri("http://auth/refreshToken")
-                .cookie("refreshToken", refreshToken)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, response ->
-                        Mono.error(new RuntimeException("Failed to refresh token")))
-                .bodyToMono(Void.class)
-                .flatMap(response -> chain.filter(exchange));
-    }
+//    private Mono<Void> requestNewAccessToken(String refreshToken, ServerWebExchange exchange, GatewayFilterChain chain) {
+//        //auth 서버에 새로운 accessToken 요청
+//        return webClientBuilder.build()
+//                .get()
+//                .uri("http://auth/refreshToken")
+//                .cookie("refreshToken", refreshToken)
+//                .retrieve()
+//                .onStatus(HttpStatusCode::is4xxClientError, response ->
+//                        Mono.error(new RuntimeException("Failed to refresh token")))
+//                .bodyToMono(Void.class)
+//                .flatMap(response -> chain.filter(exchange));
+//    }
 }
