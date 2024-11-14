@@ -47,12 +47,12 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             return chain.filter(exchange);
         }
 
-        // if accessToken is expired... then validate refreshToken and request accessToken to auth Server
-        if (refreshToken != null && jwtTokenService.validateToken(refreshToken)) {
-            Authentication authentication = jwtTokenService.getAuthentication(refreshToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return requestNewAccessToken(refreshToken, exchange, chain);
-        }
+//        // if accessToken is expired... then validate refreshToken and request accessToken to auth Server
+//        if (refreshToken != null && jwtTokenService.validateToken(refreshToken)) {
+//            Authentication authentication = jwtTokenService.getAuthentication(refreshToken);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            return requestNewAccessToken(refreshToken, exchange, chain);
+//        }
 
         // if both tokens are expired... redirect to login page...
         ServerHttpResponse response = exchange.getResponse();
