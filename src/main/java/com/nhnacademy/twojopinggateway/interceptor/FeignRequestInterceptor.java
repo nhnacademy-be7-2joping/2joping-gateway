@@ -16,7 +16,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
         String cookie =  System.getProperty("accessToken");
 
         if (cookie != null) {
-            requestTemplate.header(HttpHeaders.COOKIE, cookie);
+            requestTemplate.header(HttpHeaders.COOKIE, "accessToken="+cookie);
         }
     }
 

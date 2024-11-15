@@ -32,7 +32,8 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         return (exchange, chain) -> {
-            if (exchange.getRequest().getPath().toString().startsWith("/login")) {
+
+            if (!exchange.getRequest().getCookies().containsKey("accessToken")) {
                 return chain.filter(exchange);
             }
 
