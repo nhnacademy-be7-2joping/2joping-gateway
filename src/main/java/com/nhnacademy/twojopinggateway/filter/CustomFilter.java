@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import java.awt.*;
 import java.util.Map;
@@ -33,12 +35,14 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
             if (exchange.getRequest().getPath().toString().startsWith("/login")) {
                 return chain.filter(exchange);
             }
-            String[] cookies = exchange.getRequest().getHeaders().getFirst(HttpHeaders.COOKIE).split("; ");
-            for (String cookie : cookies) {
-                if (cookie.startsWith("accessToken=")) {
-                    System.setProperty("accessToken", cookie);
-                }
+
+            MultiValueMap<String, HttpCookie> cookies = exchange.getRequest().getCookies();
+            if (cookies.containsKey("accessToken")) {
+                System.setProperty("accessToken", cookies.getFirst("accessToken").getValue());
+            } else {
+                return chain.filter(exchange);
             }
+
             Future<Map<String,String>> future = executorService.submit(userInfoClient::getUserInfo);
             try {
                 Map<String, String> map = future.get();

@@ -23,10 +23,10 @@ public class GatewayConfig {
 
         return builder.routes()
                 .route("auth_service", r -> r.path("/auth/**", "/login")
-
                         .filters(f -> f.filter(customFilter.apply(config)))
                         .uri("lb://TWOJOPING-USER-AUTH"))// fill service here...
                 .route("bookstore_service", r -> r.path("/api/v1/**")
+                        .filters(f -> f.filter(customFilter.apply(config)))
                         .uri("lb://BOOKSTORE")) // fill service here...
                 //... 위 형식으로 서비스 계속 추가할 것.
                 .build();
