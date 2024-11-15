@@ -38,39 +38,14 @@ public class JwtTokenService {
         return List.of(accessToken, refreshToken);
     }
 
-    // 토큰에서 사용자 id 추출
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public long getCustomerId(String token) {
-        return Long.parseLong(Jwts.parser()
+    // 토큰에서 jti 추출
+    public String getJti(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("customerId").toString());
-    }
-
-    public Authentication getAuthentication(String token) {
-        // 토큰에서 사용자 이름을 추출
-        String username = Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-
-        // 사용자 권한(roles) 추출
-        List<GrantedAuthority> authorities = Arrays.stream(Jwts.parser()
-                        .setSigningKey(key)
-                        .parseClaimsJws(token)
-                        .getBody()
-                        .get("role", String.class)
-                        .split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        // 사용자 인증 정보를 바탕으로 UsernamePasswordAuthenticationToken 생성
-        return new UsernamePasswordAuthenticationToken(username, null, authorities);
+                .getId();
     }
 
     // 토큰검증
