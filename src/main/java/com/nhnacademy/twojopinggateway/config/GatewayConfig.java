@@ -1,6 +1,6 @@
 package com.nhnacademy.twojopinggateway.config;
 
-import com.nhnacademy.twojopinggateway.filter.JwtAuthenticationFilter;
+// import com.nhnacademy.twojopinggateway.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    // @Autowired
+    // private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
