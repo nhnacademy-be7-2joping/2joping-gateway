@@ -12,9 +12,14 @@ import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 
 @Component
@@ -38,15 +43,17 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
         return (exchange, chain) -> {
 
             if (!exchange.getRequest().getCookies().containsKey("accessToken")) {
-                return chain.filter(exchange);
                 // TODO 토큰이 없는 상태인데 회원만 접속 가능한 루트에 접속시 401 에러 반환
-//                if(/*path 입력*/) {
-//                    // 에러 전송
-//                }
+                return chain.filter(exchange);
+            }
+            //1안
+            if (exchange.getRequest().getPath().toString().equals("/auth/user-info")) {
+                return chain.filter(exchange);
             }
 
+
             MultiValueMap<String, HttpCookie> cookies = exchange.getRequest().getCookies();
-            System.setProperty("accessToken", cookies.getFirst("accessToken").getValue());
+            RequestContextHolder.getRequestAttributes().setAttribute("accessToken", cookies.getFirst("accessToken").getValue(), RequestAttributes.SCOPE_REQUEST);
 
             Future<Map<String,String>> future = executorService.submit(userInfoClient::getUserInfo);
             try {
@@ -55,6 +62,9 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
                         .header("X-Customer-Id", map.get("id"))
                         .header("X-Customer-Role", map.get("role"))
                         .build();
+                //2안
+//                exchange.getResponse().getHeaders().add("X-Customer-Id", map.get("id"));
+//                exchange.getResponse().getHeaders().add("X-Customer-Role", map.get("role"));
                 return chain.filter(exchange);
             } catch (InterruptedException | ExecutionException e) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
