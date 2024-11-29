@@ -53,7 +53,6 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
 
 
             MultiValueMap<String, HttpCookie> cookies = exchange.getRequest().getCookies();
-            System.setProperty("accessToken", cookies.getFirst("accessToken").getValue());
             RequestContextHolder.getRequestAttributes().setAttribute("accessToken", cookies.getFirst("accessToken").getValue(), RequestAttributes.SCOPE_REQUEST);
 
             Future<Map<String,String>> future = executorService.submit(userInfoClient::getUserInfo);
