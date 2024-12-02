@@ -69,6 +69,7 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
                                     return chain.filter(exchange);
                                 });
                     })
+                    .doFinally(signalType -> ThreadLocalContext.clear())
                     .onErrorResume(e -> {
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                         ErrorResponseDto errorResponseDto = new ErrorResponseDto("TOKEN_EXPIRED", e.getMessage());
