@@ -40,11 +40,14 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-
             if (!exchange.getRequest().getCookies().containsKey("accessToken")) {
-                // TODO 토큰이 없는 상태인데 회원만 접속 가능한 루트에 접속시 401 에러 반환
                 return chain.filter(exchange);
+                // TODO 토큰이 없는 상태인데 회원만 접속 가능한 루트에 접속시 401 에러 반환
+//                if(/*path 입력*/) {
+//                    // 에러 전송
+//                }
             }
+
             //1안
             if (exchange.getRequest().getPath().toString().equals("/auth/user-info")) {
                 return chain.filter(exchange);
