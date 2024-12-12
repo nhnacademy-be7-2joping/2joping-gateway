@@ -13,6 +13,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import java.security.Key;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,26 +27,28 @@ public class JwtTokenService {
 
     @PostConstruct
     private void setKey() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(decodedKey);
     }
 
-    public List<String> resolveToken(ServerWebExchange exchange) {
-        // 쿠키에서 JWT 추출
-        // 쿠키에서 토큰 추출, index 0: accessToken, 1: refreshToken
-        String accessToken = exchange.getRequest().getCookies().getFirst("accessToken").getValue();
-        String refreshToken = exchange.getRequest().getCookies().getFirst("refreshToken").getValue();
-
-        return List.of(accessToken, refreshToken);
-    }
-
-    // 토큰에서 jti 추출
-    public String getJti(String token) {
+    public String getRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getId();
+                .get("role")
+                .toString();
+    }
+
+    public long getCustomerId(String token) {
+        return Long.parseLong(Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("customerId")
+                .toString());
     }
 
     // 토큰검증
